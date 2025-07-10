@@ -44,7 +44,7 @@ var (
 )
 
 type Middleware func(
-	statement *Statment,
+	statement *Statement,
 )
 
 type Pipeline interface {
@@ -64,7 +64,7 @@ var _OPERATIONS = struct {
 	QUERY_ROW: 2,
 }
 
-type Statment struct {
+type Statement struct {
 	operation SQL_OPERATION
 	Query     string
 	Args      []any
@@ -77,15 +77,15 @@ type Statment struct {
 	next  func()
 }
 
-func (s *Statment) Next() {
+func (s *Statement) Next() {
 	s.next()
 }
 
-func (s *Statment) Error() error {
+func (s *Statement) Error() error {
 	return s.error
 }
 
-func (s *Statment) OperationType() SQL_OPERATION {
+func (s *Statement) OperationType() SQL_OPERATION {
 	return s.operation
 }
 

@@ -23,7 +23,7 @@ type pipeline struct {
 // used the same way as the normal SQL package but its here in case you wanna add
 // some middleware to the query execution process.
 func (p *pipeline) ExecContext(ctx context.Context, query string, args ...any) (sql.Result, error) {
-	stmt := &Statment{
+	stmt := &Statement{
 		operation: _OPERATIONS.EXEC,
 		Query:     query,
 		Args:      args,
@@ -40,7 +40,7 @@ func (p *pipeline) ExecContext(ctx context.Context, query string, args ...any) (
 // This method is used the same way as the normal SQL package but it's here in case you want to add
 // some middleware to the query execution process.
 func (p *pipeline) QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error) {
-	stmt := &Statment{
+	stmt := &Statement{
 		operation: _OPERATIONS.QUERY,
 		Query:     query,
 		Args:      args,
@@ -57,7 +57,7 @@ func (p *pipeline) QueryContext(ctx context.Context, query string, args ...any) 
 // This method is used the same way as the normal SQL package but it's here in case you want to add
 // some middleware to the query execution process.
 func (p *pipeline) QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row {
-	stmt := &Statment{
+	stmt := &Statement{
 		operation: _OPERATIONS.QUERY_ROW,
 		Query:     query,
 		Args:      args,
@@ -80,7 +80,7 @@ func (p *pipeline) Use(middleware ...Middleware) {
 	p.middlewares = append(p.middlewares, middleware...)
 }
 
-func (p *pipeline) Run(stmt *Statment) {
+func (p *pipeline) Run(stmt *Statement) {
 	index := 0
 
 	var next func()
@@ -99,7 +99,7 @@ func (p *pipeline) Run(stmt *Statment) {
 	stmt.next() // start chain
 }
 
-func (p *pipeline) execute(s *Statment) {
+func (p *pipeline) execute(s *Statement) {
 	switch s.operation {
 	case _OPERATIONS.EXEC:
 		s.Result, s.error = p.queryer.ExecContext(context.Background(), s.Query, s.Args...)
